@@ -1,47 +1,26 @@
 from esodate import *
+from datetime import *
 
-# gregorian leap year tests
-assert GregorianDate(100, 1, 1).leap_year() == False
-assert GregorianDate(101, 1, 1).leap_year() == False
-assert GregorianDate(104, 1, 1).leap_year() == True
-assert GregorianDate(200, 1, 1).leap_year() == False
-assert GregorianDate(300, 1, 1).leap_year() == False
-assert GregorianDate(400, 1, 1).leap_year() == True
-assert GregorianDate(2000, 1, 1).leap_year() == True
+# pairs of equivalent dates and ddates for conversion tests
+dates = [
+	[date(2019, 4, 5), ddate(3185, 2, 22)],
+	[date(2072, 8, 11), ddate(3238, 4, 4)],
+	[date(2074, 8, 11), ddate(3240, 4, 4)],
+	[date(2076, 2, 28), ddate(3242, 1, 59)],
+	[date(2076, 2, 29), ddate(3242, 1, 60)],
+	[date(2076, 3, 1), ddate(3242, 1, 61)],
+]
 
-# gregorian february leap year logic (based on leap years)
-assert GregorianDate(1900, 2, 1).days_in_month() == 28
-assert GregorianDate(1904, 2, 1).days_in_month() == 29
+assert ddate(3242, 1, 59).day_of_year() == 59
+assert ddate(3242, 1, 60).day_of_year() == 60
+assert ddate(3242, 1, 61).day_of_year() == 61
 
-# gregorian days in year test (based on leap years)
-assert GregorianDate(1900, 1, 1).days_in_year() == 365
-assert GregorianDate(2020, 1, 1).days_in_year() == 366
-
-# gregorian day of year test (based on leap years)
-assert GregorianDate(1900, 12, 31).day_of_year() == 365
-assert GregorianDate(2020, 12, 31).day_of_year() == 366
-
-# gregorian date comparison tests
-assert GregorianDate(1900, 12, 31) == GregorianDate(1900, 12, 31)
-assert GregorianDate(1900, 12, 31) <= GregorianDate(1900, 12, 31)
-assert GregorianDate(1900, 12, 31) >= GregorianDate(1900, 12, 31)
-assert not (GregorianDate(1900, 12, 31) != GregorianDate(1900, 12, 31))
-assert not (GregorianDate(1900, 12, 31) < GregorianDate(1900, 12, 31))
-assert not (GregorianDate(1900, 12, 31) > GregorianDate(1900, 12, 31))
-
-x = GregorianDate(1, 1, 1)
-y = x.copy()
-
-assert x == y
-assert not x < y
-assert x is not y
-
-assert x < y.adv(1)
-assert y.day == 2
-
-for i in range(100): y.adv(y.days_in_year())
-assert y > x
-assert y.year == 101
-assert y == GregorianDate(101, 1, 2)
+for pair in dates:
+	a = ddate(date=pair[0])
+	b = pair[1].date()
+	assert a == pair[1]
+	assert b == pair[0]
+	assert a.date() == pair[0]
+	assert ddate(date=b) == pair[1]
 
 print("\n\nall tests completed\n")
